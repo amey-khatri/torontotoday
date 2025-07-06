@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Box, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-function App() {
+import AppBarComponent from "./components/appbar";
+import SidebarComponent from "./components/sidebar";
+import MapComponent from "./components/map";
+
+export default function App() {
+  const theme = useTheme();
+  const toolbarHeight = theme.mixins.toolbar.minHeight; // Get the AppBar height from theme
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* 1. Your fixed header */}
+      <AppBarComponent />
+
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        p={0}
+        gap={0}
+        sx={{
+          height: `calc(100vh - ${toolbarHeight}px)`, // fill exactly the remaining space
+          overflow: "hidden",
+        }} // Adjust height to account for AppBar
+      >
+        <SidebarComponent />
+        <MapComponent />
+      </Stack>
+    </>
   );
 }
-
-export default App;
