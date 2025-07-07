@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Drawer,
   Box,
@@ -10,8 +11,6 @@ import {
   ListItem,
   List,
 } from "@mui/material";
-import React from "react";
-import events from "../data";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import { useTheme } from "@mui/material/styles";
 
@@ -64,7 +63,7 @@ function EventCard({ event }) {
   );
 }
 
-export default function SidebarComponent({ drawerWidth }) {
+export default function SidebarComponent({ events }) {
   const theme = useTheme();
 
   return (

@@ -10,6 +10,8 @@ const events = [
     dateTime: "2025-07-10T19:00:00",
     image:
       "https://infopetitenation.ca/wp-content/uploads/2025/06/toronto-jazz-festival-150.jpeg",
+    latitude: 43.656,
+    longitude: -79.3801,
   },
   {
     id: 2,
@@ -22,6 +24,8 @@ const events = [
     dateTime: "2025-09-10T18:00:00",
     image:
       "https://images.ctfassets.net/3m6gg2lxde82/2KoyANki2fxkJkp2cB187w/20fc9e519f352bd26f9ef02cfdac47d4/tiff-header.png?w=2048&h=1137&fit=fill&f=faces&q=90&fm=webp",
+    latitude: 43.6367,
+    longitude: -79.3894,
   },
   {
     id: 3,
@@ -34,6 +38,8 @@ const events = [
     dateTime: "2025-08-20T11:00:00",
     image:
       "https://i0.wp.com/onthedanforth.ca/wp-content/uploads/2012/02/1l_e-Crowd-Scene.jpg?ssl=1",
+    latitude: 43.678,
+    longitude: -79.355,
   },
   {
     id: 4,
@@ -45,6 +51,8 @@ const events = [
     price: "$20 - $25",
     dateTime: "2025-07-12T10:00:00",
     image: "https://www.rom.on.ca/sites/default/files/2024-11/ROM_Crystal.jpg",
+    latitude: 43.6677,
+    longitude: -79.3948,
   },
   {
     id: 5,
@@ -57,6 +65,8 @@ const events = [
     dateTime: "2025-07-15T17:30:00",
     image:
       "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTQP3LEKpsX5H-3KCg2jUhauF-eXZBoKte3lVgz43dELdbkk00Asuu7_h7vzaZtj9-DL7WyRvXw8ijN7Q6gNd13Q5WCGMzw_JnJHITaQg",
+    latitude: 43.6387,
+    longitude: -79.3816,
   },
   {
     id: 6,
@@ -69,6 +79,8 @@ const events = [
     dateTime: "2025-10-05T19:00:00",
     image:
       "https://basketballforever.com/wp-content/uploads/2025/06/Toronto.jpg",
+    latitude: 43.6435,
+    longitude: -79.3791,
   },
   {
     id: 7,
@@ -80,6 +92,8 @@ const events = [
     dateTime: "2025-04-15T09:00:00",
     image:
       "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-1225589833.jpg?c=original",
+    latitude: 43.6465,
+    longitude: -79.4637,
   },
   {
     id: 8,
@@ -92,6 +106,8 @@ const events = [
     dateTime: "2025-03-12T10:00:00",
     image:
       "https://humbernews.ca/wp-content/uploads/2023/03/IMG_3143-2-scaled.jpg",
+    latitude: 43.6466,
+    longitude: -79.3866,
   },
 ];
 

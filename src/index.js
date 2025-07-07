@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme";
+import "leaflet/dist/leaflet.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
