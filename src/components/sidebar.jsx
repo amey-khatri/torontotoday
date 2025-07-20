@@ -53,7 +53,7 @@ function EventCard({ event }) {
                     fontSize: "0.875rem",
                   }}
                 />
-                {event.location} {event.date}
+                {event.address} {event.startTime}
               </Typography>
             </Box>
           </CardContent>
@@ -91,7 +91,7 @@ export default function SidebarComponent({ events }) {
         <Box>
           <List>
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.eventbriteId} event={event} />
             ))}
           </List>
         </Box>

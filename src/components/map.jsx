@@ -84,8 +84,8 @@ export default function MapComponent({ events }) {
 
         {events.map((event) => (
           <Marker
-            key={event.id}
-            position={[event.latitude, event.longitude]}
+            key={event.eventbriteId}
+            position={[event.location.latitude, event.location.longitude]}
             // icon={CreateImageIcon(event.image)}
           >
             <Popup className="mapPopup" minWidth={170} maxWidth={170}>
