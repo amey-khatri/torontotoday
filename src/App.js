@@ -15,6 +15,8 @@ export default function App() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // State for sidebar toggle
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Fetch events from backend
   useEffect(() => {
@@ -60,12 +62,16 @@ export default function App() {
         p={0}
         gap={0}
         sx={{
-          height: `calc(100vh - ${toolbarHeight}px)`, // fill exactly the remaining space
+          height: `calc(100vh - ${toolbarHeight}px)`,
           overflow: "hidden",
-        }} // Adjust height to account for AppBar
+        }}
       >
-        <SidebarComponent events={events} />
-        <MapComponent events={events} />
+        <SidebarComponent
+          events={events}
+          open={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
+        <MapComponent events={events} sidebarOpen={sidebarOpen} />
       </Stack>
     </>
   );
