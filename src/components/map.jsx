@@ -130,7 +130,38 @@ function MapResizeHandler({ sidebarOpen }) {
   return null;
 }
 
-export default function MapComponent({ events, sidebarOpen }) {
+function ClickableMarker({ event, position, onMarkerClick }) {
+  const map = useMap();
+
+  const handleClick = () => {
+    map.setView(position, 14, {
+      animate: true,
+      duration: 0.5,
+    }); // Zoom in on marker
+    onMarkerClick(event);
+  };
+
+  return (
+    <Marker
+      position={position}
+      eventHandlers={{
+        click: handleClick,
+      }}
+    >
+      <Tooltip
+        className="mapPopup"
+        direction="top"
+        offset={[-15, -30]}
+        permanent={false}
+        arrow
+      >
+        <CreateCardPopup event={event} />
+      </Tooltip>
+    </Marker>
+  );
+}
+
+export default function MapComponent({ events, sidebarOpen, onMarkerClick }) {
   const center = [43.6532, -79.3832];
   const zoom = 12;
 
@@ -150,27 +181,19 @@ export default function MapComponent({ events, sidebarOpen }) {
           style={{ height: "100%", width: "100%" }}
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution="&copy; OpenStreetMap contributors"
           />
 
           <MapResizeHandler sidebarOpen={sidebarOpen} />
 
           {events.map((event) => (
-            <Marker
+            <ClickableMarker
               key={event.eventbriteId}
+              event={event}
               position={[event.location.latitude, event.location.longitude]}
-            >
-              <Tooltip
-                className="mapPopup"
-                direction="top"
-                offset={[-15, -30]}
-                permanent={false}
-                arrow
-              >
-                <CreateCardPopup event={event} />
-              </Tooltip>
-            </Marker>
+              onMarkerClick={onMarkerClick}
+            />
           ))}
         </MapContainer>
       </Box>

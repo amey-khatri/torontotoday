@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import AppBarComponent from "./components/appbar";
 import SidebarComponent from "./components/sidebar";
 import MapComponent from "./components/map";
+import EventDetailsComponent from "./components/eventdetails";
 
 export default function App() {
   const theme = useTheme();
@@ -17,6 +18,37 @@ export default function App() {
   const [error, setError] = useState(null);
   // State for sidebar toggle
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  //State for selected event in map
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [eventdetailsOpen, setEventDetailsOpen] = useState(false);
+  const [previousSidebarState, setPreviousSidebarState] = useState(true);
+
+  // const handleMarkerClick = (event) => {
+  //   setPreviousSidebarState(sidebarOpen);
+  //   setSidebarOpen(false);
+  //   setSelectedEvent(event);
+  //   setEventDetailsOpen(true);
+  // };
+
+  // const handleEventDetailsClose = () => {
+  //   setEventDetailsOpen(false);
+  //   setSelectedEvent(null);
+  //   setSidebarOpen(previousSidebarState);
+  // };
+
+  function handleMarkerClick(event) {
+    setPreviousSidebarState(sidebarOpen);
+    setSidebarOpen(false);
+    setSelectedEvent(event);
+    setEventDetailsOpen(true);
+  }
+
+  function handleEventDetailsClose() {
+    setEventDetailsOpen(false);
+    setSelectedEvent(null);
+    setSidebarOpen(previousSidebarState);
+  }
 
   // Fetch events from backend
   useEffect(() => {
@@ -54,7 +86,6 @@ export default function App() {
 
   return (
     <>
-      {/* 1. Your fixed header */}
       <AppBarComponent />
 
       <Stack
@@ -71,7 +102,16 @@ export default function App() {
           open={sidebarOpen}
           onToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <MapComponent events={events} sidebarOpen={sidebarOpen} />
+        <EventDetailsComponent
+          event={selectedEvent}
+          open={eventdetailsOpen}
+          onClose={handleEventDetailsClose}
+        />
+        <MapComponent
+          events={events}
+          sidebarOpen={sidebarOpen || eventdetailsOpen}
+          onMarkerClick={handleMarkerClick}
+        />
       </Stack>
     </>
   );
