@@ -89,7 +89,7 @@ const AppBarComponent = ({
       position="sticky"
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        bgcolor: "primary.light",
+        bgcolor: (theme) => theme.palette.background.default,
       }}
     >
       <ToolBarComponent />

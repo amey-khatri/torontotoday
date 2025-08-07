@@ -101,6 +101,7 @@ export default function App() {
           events={events}
           open={sidebarOpen}
           onToggle={() => setSidebarOpen(!sidebarOpen)}
+          onEventClick={handleMarkerClick}
         />
         <EventDetailsComponent
           event={selectedEvent}
