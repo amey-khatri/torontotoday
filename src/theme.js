@@ -26,27 +26,27 @@ const darkTheme = createTheme({
       "sans-serif",
     ].join(","),
     h1: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 700,
     },
     h2: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 700,
     },
     h3: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 600,
     },
     h4: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 600,
     },
     h5: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 500,
     },
     h6: {
-      fontFamily: "Alegreya, serif",
+      fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
       fontWeight: 500,
     },
     subtitle1: {

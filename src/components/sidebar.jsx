@@ -10,14 +10,12 @@ import {
   ListItem,
   List,
   IconButton,
-  Divider,
   GlobalStyles,
 } from "@mui/material";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useTheme } from "@mui/material/styles";
-import { useMap } from "react-leaflet";
 
 function EventCard({ event, onEventClick }) {
   const formatDateTime = (dateString) => {
@@ -47,21 +45,15 @@ function EventCard({ event, onEventClick }) {
             height="140"
             src={event.image}
             alt={event.name}
-            sx={{
-              objectFit: "cover",
-            }}
+            sx={{ objectFit: "cover" }}
           />
           <CardContent>
             <Typography variant="h6" fontSize={"1rem"} component="div">
               {event.name}
             </Typography>
-
             <Box
               component="div"
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-              }}
+              sx={{ display: "inline-flex", alignItems: "center" }}
             >
               <Typography variant="caption" color="text.secondary">
                 <AccessTimeFilledIcon
@@ -82,8 +74,165 @@ function EventCard({ event, onEventClick }) {
   );
 }
 
-const DRAWER_WIDTH = 400;
+const DRAWER_WIDTH = 410;
 const COLLAPSED_WIDTH = 0;
+
+export default function SidebarComponent({
+  events,
+  open = true,
+  onToggle,
+  onEventClick,
+}) {
+  const theme = useTheme();
+
+  if (!events || events.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          height: "100%",
+          width: open ? DRAWER_WIDTH : COLLAPSED_WIDTH,
+          position: "relative",
+        }}
+      >
+        <Box
+          sx={{ p: 2, textAlign: "center", alignContent: "center" }}
+          height="100%"
+          width="100%"
+          bgcolor={theme.palette.background.paper}
+        >
+          <Typography variant="h6">No Events Found</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        display: { xs: "none", sm: "flex" },
+        height: "100%",
+        position: "relative",
+      }}
+    >
+      {/* <CustomScrollbarStyles /> */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: open ? DRAWER_WIDTH : COLLAPSED_WIDTH,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: open ? DRAWER_WIDTH : COLLAPSED_WIDTH,
+            position: "relative",
+            height: "100%",
+            boxSizing: "border-box",
+            overflowY: open ? "auto" : "hidden",
+            overflowX: "hidden",
+            transition: theme.transitions.create(["width"], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            scrollbarColor: `${theme.palette.text.secondary} ${theme.palette.background.paper}`,
+            scrollbarWidth: "auto",
+            scrollbarGutter: "stable",
+            backgroundColor: open
+              ? theme.palette.background.paper
+              : "transparent",
+          },
+        }}
+      >
+        <ScrollableEventList
+          events={events}
+          open={open}
+          drawerWidth={DRAWER_WIDTH}
+          onEventClick={onEventClick}
+        />
+      </Drawer>
+      <ToggleSidebarButton
+        open={open}
+        onToggle={onToggle}
+        DRAWER_WIDTH={DRAWER_WIDTH}
+      />
+    </Box>
+  );
+}
+
+function ScrollableEventList({ events, open, drawerWidth, onEventClick }) {
+  const scrollRef = React.useRef(null);
+
+  const list = React.useMemo(
+    () => (Array.isArray(events) ? events : Object.values(events ?? {})),
+    [events]
+  );
+
+  const [visibleCount, setVisibleCount] = React.useState(30);
+
+  // Reset visible items when the list changes
+  React.useEffect(() => {
+    setVisibleCount(30);
+  }, [list]);
+
+  const handleScroll = (e) => {
+    const el = e.currentTarget;
+    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 40;
+    if (nearBottom) {
+      setVisibleCount((c) => Math.min(c + 30, list.length));
+    }
+  };
+
+  const visible = list.slice(0, visibleCount);
+
+  return (
+    <Box
+      ref={scrollRef}
+      onScroll={handleScroll}
+      sx={{
+        height: "100%",
+        width: "100%", // was: drawerWidth
+        position: open ? "relative" : "absolute",
+        left: 0,
+        overflowY: "auto",
+        overflowX: "hidden", // prevent horizontal scrollbar
+        visibility: open ? "visible" : "hidden",
+      }}
+    >
+      <List sx={{ p: 0, m: 0 }}>
+        {visible.map((event, idx) => (
+          <EventCard
+            key={event.eventbriteId ?? event.id ?? idx}
+            event={event}
+            onEventClick={onEventClick}
+          />
+        ))}
+      </List>
+    </Box>
+  );
+}
+
+function CustomScrollbarStyles() {
+  const theme = useTheme();
+  return (
+    <GlobalStyles
+      styles={{
+        "*": {
+          scrollbarWidth: "thin",
+          scrollbarColor: `${theme.palette.text.secondary} ${theme.palette.background.paper}`,
+        },
+        "*::-webkit-scrollbar": { width: "8px", height: "8px" },
+        "*::-webkit-scrollbar-track": {
+          background: theme.palette.background.paper,
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: theme.palette.action.hover,
+          borderRadius: "4px",
+        },
+        "*::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: theme.palette.action.hover,
+        },
+      }}
+    />
+  );
+}
 
 function ToggleSidebarButton({ open, onToggle, DRAWER_WIDTH }) {
   const theme = useTheme();
@@ -107,8 +256,8 @@ function ToggleSidebarButton({ open, onToggle, DRAWER_WIDTH }) {
           backgroundColor: theme.palette.background.paper,
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: "20%",
-          width: open ? 22 : 22,
-          height: open ? 50 : 50,
+          width: 22,
+          height: 50,
           boxShadow: 2,
           "&:hover": {
             backgroundColor: theme.palette.custom.hover,
@@ -122,121 +271,6 @@ function ToggleSidebarButton({ open, onToggle, DRAWER_WIDTH }) {
           <ChevronRightIcon fontSize="medium" />
         )}
       </IconButton>
-    </Box>
-  );
-}
-
-function ScrollableEventList({ events, open, drawerWidth, onEventClick }) {
-  const scrollRef = React.useRef(null);
-  return (
-    <Box
-      ref={scrollRef}
-      sx={{
-        height: "100%",
-        width: DRAWER_WIDTH, // Always full width
-        position: open ? "relative" : "absolute",
-        left: 0,
-        overflow: "auto", // Always allow scrolling
-        visibility: open ? "visible" : "hidden",
-      }}
-    >
-      <List>
-        {events.map((event) => (
-          <EventCard
-            key={event.eventbriteId}
-            event={event}
-            onEventClick={onEventClick}
-          />
-        ))}
-      </List>
-    </Box>
-  );
-}
-
-function CustomScrollbarStyles() {
-  const theme = useTheme();
-
-  return (
-    <GlobalStyles
-      styles={{
-        "*::-webkit-scrollbar": {
-          width: "8px",
-          height: "8px",
-        },
-        "*::-webkit-scrollbar-track": {
-          background: theme.palette.background.paper,
-        },
-        "*::-webkit-scrollbar-thumb": {
-          backgroundColor: theme.palette.action.hover,
-          borderRadius: "4px",
-        },
-        "*::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: theme.palette.action.hover,
-        },
-        // Firefox
-        "*": {
-          scrollbarWidth: "thin",
-          scrollbarColor: `${theme.palette.text.secondary} ${theme.palette.background.paper}`,
-        },
-      }}
-    />
-  );
-}
-
-export default function SidebarComponent({
-  events,
-  open = true,
-  onToggle,
-  onEventClick,
-}) {
-  const theme = useTheme();
-
-  return (
-    <Box
-      sx={{
-        display: { xs: "none", sm: "flex" },
-        height: "100%",
-        position: "relative",
-      }}
-    >
-      <CustomScrollbarStyles />
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: open ? DRAWER_WIDTH : COLLAPSED_WIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: open ? DRAWER_WIDTH : COLLAPSED_WIDTH,
-            position: "relative",
-            height: "100%",
-            boxSizing: "border-box",
-            overflow: open ? "auto" : "hidden",
-            transition: theme.transitions.create(["width"], {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-            borderRight: `1px solid ${theme.palette.divider}`,
-            backgroundColor: open
-              ? theme.palette.background.paper
-              : "transparent",
-          },
-        }}
-      >
-        {/* Always render content but with absolute positioning to maintain state */}
-        <ScrollableEventList
-          events={events}
-          open={open}
-          drawerWidth={DRAWER_WIDTH}
-          onEventClick={onEventClick}
-        />
-      </Drawer>
-
-      {/* Toggle button - positioned outside the drawer */}
-      <ToggleSidebarButton
-        open={open}
-        onToggle={onToggle}
-        DRAWER_WIDTH={DRAWER_WIDTH}
-      />
     </Box>
   );
 }

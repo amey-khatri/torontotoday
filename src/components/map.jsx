@@ -40,13 +40,27 @@ const tooltipGlobalStyles = (
   />
 );
 
-delete L.Icon.Default.prototype._getIconUrl;
+const scaleFactor = 1.2; // Scale factor for the larger icon
 
-// (b) Point Leaflet at the bundled images:
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+// Define custom icons for regular and selected markers
+const defaultIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const selectedIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+  iconSize: [25 * scaleFactor, 41 * scaleFactor], // 40% larger
+  iconAnchor: [12 * scaleFactor, 41 * scaleFactor], // Adjusted anchor point
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
 });
 
 function CreateCardPopup({ event }) {
@@ -130,14 +144,31 @@ function MapResizeHandler({ sidebarOpen }) {
   return null;
 }
 
-function ClickableMarker({ event, position, onMarkerClick }) {
+// Add this new component after MapResizeHandler
+function MapEventFocusHandler({ selectedEvent }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedEvent) {
+      const position = [
+        selectedEvent.location.latitude,
+        selectedEvent.location.longitude,
+      ];
+
+      map.setView(position, 14, {
+        animate: true,
+        duration: 0.5,
+      });
+    }
+  }, [selectedEvent, map]);
+
+  return null;
+}
+
+function ClickableMarker({ event, position, onMarkerClick, isSelected }) {
   const map = useMap();
 
   const handleClick = () => {
-    map.setView(position, 14, {
-      animate: true,
-      duration: 0.5,
-    }); // Zoom in on marker
     onMarkerClick(event);
   };
 
@@ -147,11 +178,13 @@ function ClickableMarker({ event, position, onMarkerClick }) {
       eventHandlers={{
         click: handleClick,
       }}
+      icon={isSelected ? selectedIcon : defaultIcon}
+      zIndexOffset={isSelected ? 1000 : 0} // Ensure the selected marker is on top
     >
       <Tooltip
         className="mapPopup"
         direction="top"
-        offset={[-15, -30]}
+        offset={isSelected ? [50, -80] : [0, -55]}
         permanent={false}
         arrow
       >
@@ -161,9 +194,16 @@ function ClickableMarker({ event, position, onMarkerClick }) {
   );
 }
 
-export default function MapComponent({ events, sidebarOpen, onMarkerClick }) {
+export default function MapComponent({
+  events,
+  sidebarOpen,
+  onMarkerClick,
+  selectedEvent,
+}) {
   const center = [43.6532, -79.3832];
   const zoom = 12;
+
+  const [isSelected, setIsSelected] = useState(false);
 
   return (
     <>
@@ -186,6 +226,7 @@ export default function MapComponent({ events, sidebarOpen, onMarkerClick }) {
           />
 
           <MapResizeHandler sidebarOpen={sidebarOpen} />
+          <MapEventFocusHandler selectedEvent={selectedEvent} />
 
           {events.map((event) => (
             <ClickableMarker
@@ -193,6 +234,10 @@ export default function MapComponent({ events, sidebarOpen, onMarkerClick }) {
               event={event}
               position={[event.location.latitude, event.location.longitude]}
               onMarkerClick={onMarkerClick}
+              isSelected={
+                selectedEvent &&
+                selectedEvent.eventbriteId === event.eventbriteId
+              }
             />
           ))}
         </MapContainer>

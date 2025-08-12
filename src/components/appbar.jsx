@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
+import FiltersButton from "./filters";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -45,7 +46,7 @@ const SearchField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-function ToolBarComponent({}) {
+function ToolBarComponent({ events, setFilteredEvents }) {
   return (
     <StyledToolbar>
       <Typography variant="h5" component="div">
@@ -66,24 +67,13 @@ function ToolBarComponent({}) {
       />
 
       <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1 }}>
-        <FilterButton>
-          <Typography variant="body1">Date</Typography>
-        </FilterButton>
-        <FilterButton>
-          <Typography variant="body1">Category</Typography>
-        </FilterButton>
+        <FiltersButton events={events} setFilteredEvents={setFilteredEvents} />
       </Box>
     </StyledToolbar>
   );
 }
 
-const AppBarComponent = ({
-  title = "Today in Toronto",
-  //   searchValue,
-  //   onSearchChange,
-  //   onFilterDate,
-  //   onFilterCategory,
-}) => {
+export default function AppBarComponent({ events, setFilteredEvents }) {
   return (
     <AppBar
       position="sticky"
@@ -92,9 +82,7 @@ const AppBarComponent = ({
         bgcolor: (theme) => theme.palette.background.default,
       }}
     >
-      <ToolBarComponent />
+      <ToolBarComponent events={events} setFilteredEvents={setFilteredEvents} />
     </AppBar>
   );
-};
-
-export default AppBarComponent;
+}

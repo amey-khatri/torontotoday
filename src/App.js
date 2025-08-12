@@ -4,6 +4,7 @@ import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import AppBarComponent from "./components/appbar";
+import FiltersButton from "./components/filters";
 import SidebarComponent from "./components/sidebar";
 import MapComponent from "./components/map";
 import EventDetailsComponent from "./components/eventdetails";
@@ -16,6 +17,8 @@ export default function App() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+
   // State for sidebar toggle
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -24,21 +27,8 @@ export default function App() {
   const [eventdetailsOpen, setEventDetailsOpen] = useState(false);
   const [previousSidebarState, setPreviousSidebarState] = useState(true);
 
-  // const handleMarkerClick = (event) => {
-  //   setPreviousSidebarState(sidebarOpen);
-  //   setSidebarOpen(false);
-  //   setSelectedEvent(event);
-  //   setEventDetailsOpen(true);
-  // };
-
-  // const handleEventDetailsClose = () => {
-  //   setEventDetailsOpen(false);
-  //   setSelectedEvent(null);
-  //   setSidebarOpen(previousSidebarState);
-  // };
-
   function handleMarkerClick(event) {
-    setPreviousSidebarState(sidebarOpen);
+    if (!eventdetailsOpen) setPreviousSidebarState(sidebarOpen);
     setSidebarOpen(false);
     setSelectedEvent(event);
     setEventDetailsOpen(true);
@@ -62,7 +52,7 @@ export default function App() {
         }
 
         const data = await response.json();
-        setEvents(data);
+        setEvents(data.events);
       } catch (err) {
         console.error("Error fetching events:", err);
         setError(err.message);
@@ -73,6 +63,11 @@ export default function App() {
 
     fetchEvents();
   }, []);
+
+  // Keep filteredEvents in sync when events refresh
+  useEffect(() => {
+    setFilteredEvents(events || []);
+  }, [events]);
 
   // Show loading state
   if (loading) {
@@ -86,34 +81,41 @@ export default function App() {
 
   return (
     <>
-      <AppBarComponent />
+      <Box height={"100vh"} width={"100vw"}>
+        <AppBarComponent
+          events={events}
+          setFilteredEvents={setFilteredEvents}
+        />
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        p={0}
-        gap={0}
-        sx={{
-          height: `calc(100vh - ${toolbarHeight}px)`,
-          overflow: "hidden",
-        }}
-      >
-        <SidebarComponent
-          events={events}
-          open={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-          onEventClick={handleMarkerClick}
-        />
-        <EventDetailsComponent
-          event={selectedEvent}
-          open={eventdetailsOpen}
-          onClose={handleEventDetailsClose}
-        />
-        <MapComponent
-          events={events}
-          sidebarOpen={sidebarOpen || eventdetailsOpen}
-          onMarkerClick={handleMarkerClick}
-        />
-      </Stack>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          p={0}
+          gap={0}
+          sx={{
+            //height: `calc(100vh - ${toolbarHeight}px)`,
+            height: `calc(100vh - 64px)`,
+            overflow: "hidden",
+          }}
+        >
+          <SidebarComponent
+            events={filteredEvents}
+            open={sidebarOpen}
+            onToggle={() => setSidebarOpen(!sidebarOpen)}
+            onEventClick={handleMarkerClick}
+          />
+          <EventDetailsComponent
+            event={selectedEvent}
+            open={eventdetailsOpen}
+            onClose={handleEventDetailsClose}
+          />
+          <MapComponent
+            events={filteredEvents}
+            sidebarOpen={sidebarOpen || eventdetailsOpen}
+            onMarkerClick={handleMarkerClick}
+            selectedEvent={selectedEvent}
+          />
+        </Stack>
+      </Box>
     </>
   );
 }
