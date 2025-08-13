@@ -85,6 +85,7 @@ export default function App() {
         <AppBarComponent
           events={events}
           setFilteredEvents={setFilteredEvents}
+          onMarkerClick={handleMarkerClick}
         />
 
         <Stack
