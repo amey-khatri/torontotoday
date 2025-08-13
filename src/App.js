@@ -4,7 +4,6 @@ import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import AppBarComponent from "./components/appbar";
-import FiltersButton from "./components/filters";
 import SidebarComponent from "./components/sidebar";
 import MapComponent from "./components/map";
 import EventDetailsComponent from "./components/eventdetails";
@@ -42,10 +41,13 @@ export default function App() {
 
   // Fetch events from backend
   useEffect(() => {
+    const API_BASE =
+      process.env.TorontoToday_API_URL || "http://localhost:3000";
+
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/events/");
+        const response = await fetch(`${API_BASE}/events`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -93,7 +95,6 @@ export default function App() {
           p={0}
           gap={0}
           sx={{
-            //height: `calc(100vh - ${toolbarHeight}px)`,
             height: `calc(100vh - 64px)`,
             overflow: "hidden",
           }}

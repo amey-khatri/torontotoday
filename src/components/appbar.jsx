@@ -53,20 +53,6 @@ function ToolBarComponent({ events, setFilteredEvents, onMarkerClick }) {
       <Typography variant="h5" component="div" marginLeft={1}>
         TorontoToday
       </Typography>
-      {/* <SearchField
-        variant="outlined"
-        size="small"
-        placeholder="Search events..."
-        sx={{ width: { xs: "30%", sm: "40%" } }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon color="action" />
-            </InputAdornment>
-          ),
-        }}
-      /> */}
-
       <SearchBar events={events} onMarkerClick={onMarkerClick} />
 
       <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1 }}>

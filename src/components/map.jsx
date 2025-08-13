@@ -238,7 +238,7 @@ function ClustersLayer({ events = [], onMarkerClick, selectedEvent }) {
     const size = count < 10 ? 30 : count < 100 ? 36 : 44;
     return L.divIcon({
       html: `<div style="
-        background:#1976f9;
+        background:#2A81CBbb;
         color:#fff;
         border-radius:50%;
         display:flex;
@@ -246,7 +246,6 @@ function ClustersLayer({ events = [], onMarkerClick, selectedEvent }) {
         justify-content:center;
         width:${size}px;
         height:${size}px;
-        border:2px solid rgba(0,0,0,0.15);
         box-shadow:0 2px 6px rgba(0,0,0,0.2);
         font-weight:600;
         font-family:inherit;
@@ -359,7 +358,6 @@ export default function MapComponent({
           <MapResizeHandler sidebarOpen={sidebarOpen} />
           <MapEventFocusHandler selectedEvent={selectedEvent} />
 
-          {/* Replace individual markers with clustered layer */}
           <ClustersLayer
             events={events}
             onMarkerClick={onMarkerClick}

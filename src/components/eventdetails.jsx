@@ -64,7 +64,7 @@ function EventImage({ event }) {
       sx={{
         height: IMAGE_HEIGHT,
         minHeight: IMAGE_HEIGHT,
-        flexShrink: 0, // Prevents the box from shrinking
+        flexShrink: 0,
         position: "relative",
         display: "flex",
         justifyContent: "center",
@@ -252,7 +252,7 @@ export default function EventDetailsComponent({ event, open, onClose }) {
             position: "relative",
             height: "100%",
             boxSizing: "border-box",
-            overflow: "hidden", // Changed from auto to hidden for the drawer itself
+            overflow: "hidden",
             transition: theme.transitions.create(["width"], {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.enteringScreen,
@@ -277,8 +277,6 @@ export default function EventDetailsComponent({ event, open, onClose }) {
             <CloseButton onClose={onClose} />
             <EventImage event={event} />
             <EventDetailsContent event={event} />
-
-            {/* Scrollable content area */}
           </Box>
         )}
       </Drawer>

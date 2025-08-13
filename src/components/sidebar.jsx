@@ -188,7 +188,7 @@ function ScrollableEventList({ events, open, drawerWidth, onEventClick }) {
       onScroll={handleScroll}
       sx={{
         height: "100%",
-        width: "100%", // was: drawerWidth
+        width: "100%",
         position: open ? "relative" : "absolute",
         left: 0,
         overflowY: "auto",
